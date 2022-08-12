@@ -1,0 +1,426 @@
+openapi: '3.0.3'
+info:
+  title: Spotify-Api
+  description: All endpoints of the personal Spotify-Api
+  version: 1.0.0
+servers:
+  - url: 'https://{host}/spotify-api/{basePath}'
+    description: 'Api Server'
+    variables:
+      host:
+        enum:
+          - 'kolkie.de'
+          - 'localhost:8080'
+        default: 'kolkie.de'
+      basePath:
+        enum:
+          - v1
+          - dev
+        default: v1
+paths:
+  /Context/{contextUri}/PlayCount:
+    get:
+      tags:
+        - Context
+      summary: Gets the play count for the given context
+      operationId: getContextPlayCount
+      parameters:
+        - name: contextUri
+          schema:
+            type: string
+          example: 'spotify:playlist:37i9dQZF1EVJSvZp5AOML2'
+          in: path
+          required: true
+      responses:
+        200:
+          $ref: '#/components/responses/CountObjectResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Playback/History:
+    get:
+      tags:
+        - Playback
+      summary: Gets the playback history
+      operationId: getPlaybackHistory
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayHistory'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/TopTracks:
+    get:
+      tags:
+        - Statistics
+      summary: Gets the top 5 tracks for the given timeframe
+      operationId: getTopTracks
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          $ref: '#/components/responses/TopContentResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/TopContexts:
+    get:
+      tags:
+        - Statistics
+      summary: Gets the top 5 contexts for the given timeframe
+      operationId: getTopContexts
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          $ref: '#/components/responses/TopContentResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/TopArtists:
+    get:
+      tags:
+        - Statistics
+      summary: Gets the top 5 artists for the given timeframe
+      operationId: getTopArtists
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          $ref: '#/components/responses/TopContentResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/ListeningClock:
+    get:
+      tags:
+        - Statistics
+      summary: Get the percentage of listened tracks for each hour
+      operationId: getListeningClock
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 24
+                maxItems: 24
+                items:
+                  $ref: '#/components/schemas/ListeningClockDataPoint'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/Streak:
+    get:
+      tags:
+        - Statistics
+      summary: Gets the top five streaks of continuous days of listening
+      operationId: getStreak
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 5
+                items:
+                  $ref: '#/components/schemas/Streak'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/MostActiveDay:
+    get:
+      tags:
+        - Statistics
+      summary: Gets the most active day
+      operationId: getMostActiveDay
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MostActiveDay'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Track/{trackId}/PlayCount:
+    get:
+      tags:
+        - Track
+      summary: Gets the play count for the given track
+      operationId: getTrackPlayCount
+      parameters:
+        - name: trackId
+          schema: 
+            type: string
+          example: '1zRT09DPHl91ozARaXndAs'
+          in: path
+          required: true
+      responses:
+        200:
+          $ref: '#/components/responses/CountObjectResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Track/{trackId}/GetMonthsWhereTrackIsTop:
+    get:
+      tags:
+        - Track
+      summary: Gets all the months in which the track was the top track
+      operationId: getMonthsWhereTrackIsTop
+      parameters:
+        - name: trackId
+          schema:
+            type: string
+          example: '1zRT09DPHl91ozARaXndAs'
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                items:
+                  $ref: '#/components/schemas/TopTrackForMonth'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Track/{trackId}/TopTrackForDays:
+    get:
+      tags:
+        - Track
+      summary: Gets the number of days and plays if this track is the most listened to track for the last days
+      operationId: getTopTrackForDays
+      parameters:
+        - name: trackId
+          schema:
+            type: string
+          example: '1zRT09DPHl91ozARaXndAs'
+          in: path
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopTrackForDays'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Track/TotalTracks:
+    get:
+      tags:
+        - Track
+      summary: Gets the total listened to tracks for the given timeframe
+      operationId: getTotalTracks
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          $ref: '#/components/responses/CountObjectsResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Track/TopTrackForEachMonth:
+    get:
+      tags:
+        - Track
+      summary: Gets the top track for each month from the beginning of recording
+      operationId: getTopTrackForEachMonth
+      responses:
+        200:
+          description: OK
+          content: 
+            application/json: 
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TopTrackForMonth'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Track/UniqueTracks:
+    get:
+      tags:
+        - Track
+      summary: Gets the total listened to unique tracks for the given timeframe
+      operationId: getUniqueTracks
+      parameters:
+        - $ref: '#/components/parameters/FromTimestamp'
+        - $ref: '#/components/parameters/ToTimestamp'
+      responses:
+        200:
+          $ref: '#/components/responses/CountObjectsResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+
+
+security:
+  - ApiKeyAuth: [ ]
+
+components:
+  schemas:
+    PlayHistory:
+      type: object
+      properties:
+        trackId:
+          type: string
+          example: '1zRT09DPHl91ozARaXndAs'
+        contextUri:
+          type: string
+          example: 'spotify:playlist:37i9dQZF1EVJSvZp5AOML2'
+        playedAt:
+          type: integer
+          description: Unix Timestamp in seconds
+          example: 1613067412
+    TopContent:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1zRT09DPHl91ozARaXndAs'
+        count:
+          type: integer
+          example: 23
+    TopTrackForDays:
+      type: object
+      properties:
+        days:
+          type: integer
+          nullable: true
+        plays:
+          type: integer
+          nullable: true
+    TopTrackForMonth:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 3
+        trackId:
+          type: string
+          example: '1zRT09DPHl91ozARaXndAs'
+        firstDate: 
+          type: string
+          example: '2022-08-01'
+          format: date
+    CountObject:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 12
+    Streak:
+      type: object
+      properties:
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date
+        days:
+          type: integer
+    MostActiveDay:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        count:
+          type: integer
+    ListeningClockDataPoint:
+      type: object
+      properties:
+        hour:
+          type: string
+          example: '05'
+        count:
+          type: number
+          example: 2.6542
+          format: double
+  parameters:
+    FromTimestamp:
+      required: true
+      name: from
+      in: query
+      description: Unix timestamp in seconds
+      schema:
+        type: integer
+    ToTimestamp:
+      required: true
+      name: to
+      in: query
+      description: Unix timestamp in seconds
+      schema:
+        type: integer
+  securitySchemes:
+    ApiKeyAuth:
+      $ref: 'swagger-shared.yaml#/components/securitySchemes/ApiKeyAuth'
+  responses:
+    TopContentResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            maxItems: 5
+            items:
+              $ref: '#/components/schemas/TopContent'
+    CountObjectResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CountObject'
+    CountObjectsResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CountObject'

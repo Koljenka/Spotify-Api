@@ -1,0 +1,77 @@
+openapi: '3.0.3'
+info:
+  title: Spotify-Api
+  description: All endpoints of the personal Spotify-Api
+  version: 1.0.0
+servers:
+  - url: 'https://{host}/spotify-api/{basePath}'
+    description: 'Api Server'
+    variables:
+      host:
+        enum:
+          - 'kolkie.de'
+          - 'localhost:8080'
+        default: 'kolkie.de'
+      basePath:
+        enum:
+          - v1
+          - dev
+        default: v1
+
+tags:
+  - name: Context
+  - name: Playback
+    description: All information about the playback history
+  - name: Statistics
+    description: All stats
+  - name: SmallStats
+  - name: Track
+paths:
+  /Context/{contextUri}/PlayCount:
+    $ref: 'swagger-node.yaml#/paths/~1Context~1{contextUri}~1PlayCount'
+  /Playback/History:
+    $ref: 'swagger-node.yaml#/paths/~1Playback~1History'
+  /Statistics/TopTracks:
+    $ref: 'swagger-node.yaml#/paths/~1Statistics~1TopTracks'
+  /Statistics/TopContexts:
+    $ref: 'swagger-node.yaml#/paths/~1Statistics~1TopContexts'
+  /Statistics/TopArtists:
+    $ref: 'swagger-node.yaml#/paths/~1Statistics~1TopArtists'
+  /Statistics/ListeningClock:
+    $ref: 'swagger-node.yaml#/paths/~1Statistics~1ListeningClock'
+  /Statistics/Streak:
+    $ref: 'swagger-node.yaml#/paths/~1Statistics~1Streak'
+  /Statistics/Box/NormalStats:
+    $ref: 'swagger-java.yaml#/paths/~1Statistics~1Box~1NormalStats'
+  /Statistics/Box/SlowStats:
+    $ref: 'swagger-java.yaml#/paths/~1Statistics~1Box~1SlowStats'
+  /Statistics/Small/UniqueArtist:
+    $ref: 'swagger-java.yaml#/paths/~1Statistics~1Small~1UniqueArtist'
+  /Statistics/Small/AverageFeature:
+    $ref: 'swagger-java.yaml#/paths/~1Statistics~1Small~1AverageFeature'
+  /Statistics/Small/ListeningTime:
+    $ref: 'swagger-java.yaml#/paths/~1Statistics~1Small~1ListeningTime'
+  /Statistics/Small/TimeSpent:
+    $ref: 'swagger-java.yaml#/paths/~1Statistics~1Small~1TimeSpent'
+  /Statistics/MostActiveDay:
+    $ref: 'swagger-node.yaml#/paths/~1Statistics~1MostActiveDay'
+  /Track/{trackId}/PlayCount:
+    $ref: 'swagger-node.yaml#/paths/~1Track~1{trackId}~1PlayCount'
+  /Track/{trackId}/GetMonthsWhereTrackIsTop:
+    $ref: 'swagger-node.yaml#/paths/~1Track~1{trackId}~1GetMonthsWhereTrackIsTop'
+  /Track/{trackId}/TopTrackForDays:
+    $ref: 'swagger-node.yaml#/paths/~1Track~1{trackId}~1TopTrackForDays'
+  /Track/TotalTracks:
+    $ref: 'swagger-node.yaml#/paths/~1Track~1TotalTracks'
+  /Track/TopTrackForEachMonth:
+    $ref: 'swagger-node.yaml#/paths/~1Track~1TopTrackForEachMonth'
+  /Track/UniqueTracks:
+    $ref: 'swagger-node.yaml#/paths/~1Track~1UniqueTracks'
+
+security:
+  - ApiKeyAuth: [ ]
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      $ref: 'swagger-shared.yaml#/components/securitySchemes/ApiKeyAuth'

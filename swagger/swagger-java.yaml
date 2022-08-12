@@ -1,0 +1,323 @@
+openapi: '3.0.3'
+info:
+  title: Spotify-Api
+  description: All endpoints of the personal Spotify-Api
+  version: 1.0.0
+servers:
+  - url: 'https://{host}/spotify-api/{basePath}'
+    description: 'Api Server'
+    variables:
+      host:
+        enum:
+          - 'kolkie.de'
+          - 'localhost:8080'
+        default: 'kolkie.de'
+      basePath:
+        enum:
+          - v1
+          - dev
+        default: v1
+
+paths:
+  /Statistics/Box/NormalStats:
+    get:
+      tags:
+        - Statistics
+      summary: Gets BoxStats for the given song if any are found
+      operationId: getNormalBoxStats
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BoxStat'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/Box/SlowStats:
+    get:
+      tags:
+        - Statistics
+      summary: Gets difficult to calculate BoxStats for the given song if any are found
+      operationId: getSlowBoxStats
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BoxStat'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/Small/UniqueArtist:
+    get:
+      summary: Gets the unique artists for the given timeframe
+      tags:
+        - SmallStats
+      operationId: getUniqueArtistStat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmallStatRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/SmallStatResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/Small/AverageFeature:
+    get:
+      tags:
+        - SmallStats
+      operationId: getAverageFeatureStat
+      parameters:
+        - name: feature
+          in: query
+          required: true
+          schema: 
+            type: string
+            enum:
+              - valence
+              - energy
+              - danceability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmallStatRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/SmallStatResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/Small/ListeningTime:
+    get:
+      tags:
+        - SmallStats
+      operationId: getListeningTime
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmallStatRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/SmallStatResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+  /Statistics/Small/TimeSpent:
+    get:
+      tags:
+        - SmallStats
+      operationId: getTimeSpent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmallStatRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/SmallStatResponse'
+        401:
+          $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
+        default:
+          $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
+
+security:
+  - ApiKeyAuth: [ ]
+
+components:
+  schemas:
+    ApiAudioFeatures:
+      type: object
+      properties:
+        danceability:
+          type: number
+          format: float
+          nullable: false
+        energy:
+          type: number
+          format: float
+          nullable: false
+        valence:
+          type: number
+          format: float
+          nullable: false
+        key:
+          type: integer
+          nullable: false
+        mode:
+          type: integer
+          nullable: false
+          description: 1 is major 0 is minor
+          enum:
+            - 0
+            - 1
+        tempo:
+          type: number
+          format: float
+          nullable: false
+    ApiTrack:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        duration:
+          type: integer
+          nullable: false
+        artist:
+          type: string
+          nullable: true
+    ApiAlbum:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        albumType:
+          type: string
+          enum:
+            - album
+            - compilation
+            - single
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        releaseDate:
+          type: string
+          nullable: false
+          format: date
+        totalTracks:
+          type: integer
+          nullable: false
+        tracks:
+          type: array
+          nullable: false
+          items:
+            $ref: '#/components/schemas/ApiTrack'
+    ApiPlaybackHistoryObject:
+      type: object
+      properties:
+        playedAt:
+          type: integer
+          format: int64
+        track:
+          $ref: '#/components/schemas/ApiTrack'
+        contextType:
+          type: string
+          nullable: true
+        audioFeatures:
+          $ref: '#/components/schemas/ApiAudioFeatures'
+    Stat:
+      type: object
+      properties:
+        prevTimeframe:
+          $ref: '#/components/schemas/Timeframe'
+        prevValue:
+          type: string
+          nullable: false
+        value:
+          type: string
+          nullable: false
+    SmallStat:
+      type: object
+      properties:
+        id:
+          type: integer
+          nullable: false
+        heading:
+          type: string
+          nullable: false
+        icon:
+          type: string
+          nullable: false
+        stat:
+          $ref: '#/components/schemas/Stat'
+    SmallStatRequest:
+      type: object
+      properties:
+        playbackHistory:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiPlaybackHistoryObject'
+        timeframe:
+          $ref: '#/components/schemas/Timeframe'
+        prevTimeframe:
+          $ref: '#/components/schemas/Timeframe'
+    StatRequest:
+      type: object
+      properties:
+        track:
+          $ref: '#/components/schemas/ApiTrack'
+        album:
+          $ref: '#/components/schemas/ApiAlbum'
+    BoxStat:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: false
+        description:
+          type: string
+          nullable: false
+        icon:
+          type: string
+          nullable: false
+    Timeframe:
+      type: object
+      properties:
+        start:
+          nullable: false
+          type: integer
+          format: int64
+        end:
+          nullable: false
+          type: integer
+          format: int64
+  responses:
+    SmallStatResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SmallStat'
+  
+  
+  securitySchemes:
+    ApiKeyAuth:
+      $ref: 'swagger-shared.yaml#/components/securitySchemes/ApiKeyAuth'

@@ -14,6 +14,7 @@ generateSwagger:
 build:
   stage: build
   script: 
+    - ls
     - pwd
     - cd ./gen
     - npm install

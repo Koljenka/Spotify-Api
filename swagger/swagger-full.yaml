@@ -2,7 +2,7 @@ openapi: '3.0.3'
 info:
   title: Spotify-Api
   description: All endpoints of the personal Spotify-Api
-  version: 1.0.1
+  version: 1.1.0
 servers:
   - url: 'https://{host}/spotify-api/{basePath}'
     description: 'Api Server'
@@ -67,11 +67,3 @@ paths:
     $ref: 'swagger-node.yaml#/paths/~1Track~1TopTrackForEachMonth'
   /Track/UniqueTracks:
     $ref: 'swagger-node.yaml#/paths/~1Track~1UniqueTracks'
-
-security:
-  - ApiKeyAuth: [ ]
-
-components:
-  securitySchemes:
-    ApiKeyAuth:
-      $ref: 'swagger-shared.yaml#/components/securitySchemes/ApiKeyAuth'

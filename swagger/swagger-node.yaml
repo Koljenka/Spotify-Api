@@ -2,7 +2,7 @@ openapi: '3.0.3'
 info:
   title: Spotify-Api
   description: All endpoints of the personal Spotify-Api
-  version: 1.0.1
+  version: 1.1.0
 servers:
   - url: 'https://{host}/spotify-api/{basePath}'
     description: 'Api Server'
@@ -25,6 +25,7 @@ paths:
       summary: Gets the play count for the given context
       operationId: getContextPlayCount
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - name: contextUri
           schema:
             type: string
@@ -44,6 +45,8 @@ paths:
         - Playback
       summary: Gets the playback history
       operationId: getPlaybackHistory
+      parameters:
+        - $ref: '#/components/parameters/AccessToken'
       responses:
         200:
           description: OK
@@ -64,6 +67,7 @@ paths:
       summary: Gets the top 5 tracks for the given timeframe
       operationId: getTopTracks
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -80,6 +84,7 @@ paths:
       summary: Gets the top 5 contexts for the given timeframe
       operationId: getTopContexts
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -96,6 +101,7 @@ paths:
       summary: Gets the top 5 artists for the given timeframe
       operationId: getTopArtists
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -112,6 +118,7 @@ paths:
       summary: Get the percentage of listened tracks for each hour
       operationId: getListeningClock
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -136,6 +143,7 @@ paths:
       summary: Gets the top five streaks of continuous days of listening
       operationId: getStreak
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -159,6 +167,7 @@ paths:
       summary: Gets the most active day
       operationId: getMostActiveDay
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -181,6 +190,7 @@ paths:
       summary: Gets the play count for the given track
       operationId: getTrackPlayCount
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - name: trackId
           schema: 
             type: string
@@ -201,6 +211,7 @@ paths:
       summary: Gets all the months in which the track was the top track
       operationId: getMonthsWhereTrackIsTop
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - name: trackId
           schema:
             type: string
@@ -228,6 +239,7 @@ paths:
       summary: Gets the number of days and plays if this track is the most listened to track for the last days
       operationId: getTopTrackForDays
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - name: trackId
           schema:
             type: string
@@ -252,6 +264,7 @@ paths:
       summary: Gets the total listened to tracks for the given timeframe
       operationId: getTotalTracks
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -267,6 +280,8 @@ paths:
         - Track
       summary: Gets the top track for each month from the beginning of recording
       operationId: getTopTrackForEachMonth
+      parameters:
+        - $ref: '#/components/parameters/AccessToken'
       responses:
         200:
           description: OK
@@ -287,6 +302,7 @@ paths:
       summary: Gets the total listened to unique tracks for the given timeframe
       operationId: getUniqueTracks
       parameters:
+        - $ref: '#/components/parameters/AccessToken'
         - $ref: '#/components/parameters/FromTimestamp'
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
@@ -296,10 +312,6 @@ paths:
           $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
         default:
           $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
-
-
-security:
-  - ApiKeyAuth: [ ]
 
 components:
   schemas:
@@ -383,6 +395,12 @@ components:
           example: 2.6542
           format: double
   parameters:
+    AccessToken:
+      required: true
+      name: accessToken
+      schema:
+        type: string
+      in: header
     FromTimestamp:
       required: true
       name: from
@@ -397,9 +415,6 @@ components:
       description: Unix timestamp in seconds
       schema:
         type: integer
-  securitySchemes:
-    ApiKeyAuth:
-      $ref: 'swagger-shared.yaml#/components/securitySchemes/ApiKeyAuth'
   responses:
     TopContentResponse:
       description: OK

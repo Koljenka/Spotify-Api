@@ -2,7 +2,7 @@ openapi: '3.0.3'
 info:
   title: Spotify-Api
   description: All endpoints of the personal Spotify-Api
-  version: 1.0.1
+  version: 1.1.0
 servers:
   - url: 'https://{host}/spotify-api/{basePath}'
     description: 'Api Server'
@@ -153,8 +153,6 @@ paths:
         default:
           $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
 
-security:
-  - ApiKeyAuth: [ ]
 
 components:
   schemas:
@@ -271,6 +269,10 @@ components:
     SmallStatRequest:
       type: object
       properties:
+        accessToken:
+          type: string
+          required: true
+          nullable: false
         playbackHistory:
           type: array
           items:
@@ -282,6 +284,10 @@ components:
     StatRequest:
       type: object
       properties:
+        accessToken:
+          type: string
+          required: true
+          nullable: false
         track:
           $ref: '#/components/schemas/ApiTrack'
         album:
@@ -316,8 +322,3 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SmallStat'
-  
-  
-  securitySchemes:
-    ApiKeyAuth:
-      $ref: 'swagger-shared.yaml#/components/securitySchemes/ApiKeyAuth'

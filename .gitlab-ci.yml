@@ -6,9 +6,8 @@ stages:
   - deploy
 
 generateSwagger:
+  image: openjdk:8
   stage: preBuild
-  before_script:
-    - npm install @openapitools/openapi-generator-cli -g
   script: 
     - ./generateApiClient.sh
 

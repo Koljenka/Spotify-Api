@@ -10,15 +10,20 @@ generateSwagger:
   stage: preBuild
   script: 
     - ./generateApiClient.sh
+  artifacts: 
+    expire_in: 1 day
+    paths:
+      - './gen'
 
 build:
   stage: build
   script: 
-    - ls
-    - pwd
     - cd ./gen
     - npm install
     - npm run build
+  needs:
+    - job: generateSwagger
+      artifacts: true
   artifacts:
     paths:
       - './gen/dist'

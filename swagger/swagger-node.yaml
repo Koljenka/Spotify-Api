@@ -2,7 +2,7 @@ openapi: '3.0.3'
 info:
   title: Spotify-Api
   description: All endpoints of the personal Spotify-Api
-  version: 1.0.0
+  version: 1.0.1
 servers:
   - url: 'https://{host}/spotify-api/{basePath}'
     description: 'Api Server'

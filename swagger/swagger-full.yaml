@@ -29,11 +29,11 @@ tags:
   - name: Track
 paths:
   /Color/Average:
-    $ref: '/swagger-python.yaml#/paths/~1Color~1Average'
+    $ref: 'swagger-python.yaml#/paths/~1Color~1Average'
   /Color/Dominant:
-    $ref: '/swagger-python.yaml#/paths/~1Color~1Dominant'
+    $ref: 'swagger-python.yaml#/paths/~1Color~1Dominant'
   /Color/Palette:
-    $ref: '/swagger-python.yaml#/paths/~1Color~1Palette'
+    $ref: 'swagger-python.yaml#/paths/~1Color~1Palette'
   /Context/{contextUri}/PlayCount:
     $ref: 'swagger-node.yaml#/paths/~1Context~1{contextUri}~1PlayCount'
   /Playback/History:

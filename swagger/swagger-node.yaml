@@ -2,21 +2,21 @@ openapi: '3.0.3'
 info:
   title: Spotify-Api
   description: All endpoints of the personal Spotify-Api
-  version: 1.1.0
+  version: 2.0.0
 servers:
-  - url: 'https://{host}/spotify-api/{basePath}'
+  - url: '{scheme}://{host}/spotify-api'
     description: 'Api Server'
     variables:
+      scheme:
+        enum:
+          - 'https'
+          - 'http'
+        default: 'https'
       host:
         enum:
           - 'kolkie.de'
           - 'localhost:8080'
         default: 'kolkie.de'
-      basePath:
-        enum:
-          - v1
-          - dev
-        default: v1
 paths:
   /Context/{contextUri}/PlayCount:
     get:
@@ -140,7 +140,7 @@ paths:
     get:
       tags:
         - Statistics
-      summary: Gets the top five streaks of continuous days of listening
+      summary: Gets the top streak of continuous days of listening
       operationId: getStreak
       parameters:
         - $ref: '#/components/parameters/AccessToken'
@@ -152,10 +152,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                maxItems: 5
-                items:
-                  $ref: '#/components/schemas/Streak'
+                $ref: '#/components/schemas/Streak'
         401:
           $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
         default:
@@ -176,9 +173,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MostActiveDay'
+                $ref: '#/components/schemas/MostActiveDay'
         401:
           $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
         default:
@@ -192,7 +187,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/AccessToken'
         - name: trackId
-          schema: 
+          schema:
             type: string
           example: '1zRT09DPHl91ozARaXndAs'
           in: path
@@ -269,7 +264,7 @@ paths:
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
         200:
-          $ref: '#/components/responses/CountObjectsResponse'
+          $ref: '#/components/responses/CountObjectResponse'
         401:
           $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
         default:
@@ -285,8 +280,8 @@ paths:
       responses:
         200:
           description: OK
-          content: 
-            application/json: 
+          content:
+            application/json:
               schema:
                 type: array
                 items:
@@ -307,7 +302,7 @@ paths:
         - $ref: '#/components/parameters/ToTimestamp'
       responses:
         200:
-          $ref: '#/components/responses/CountObjectsResponse'
+          $ref: '#/components/responses/CountObjectResponse'
         401:
           $ref: 'swagger-shared.yaml#/components/responses/UnauthorizedResponse'
         default:
@@ -355,7 +350,7 @@ components:
         trackId:
           type: string
           example: '1zRT09DPHl91ozARaXndAs'
-        firstDate: 
+        firstDate:
           type: string
           example: '2022-08-01'
           format: date
@@ -431,11 +426,3 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CountObject'
-    CountObjectsResponse:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/CountObject'

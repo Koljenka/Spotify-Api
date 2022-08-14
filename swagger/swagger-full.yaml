@@ -2,7 +2,7 @@ openapi: '3.0.3'
 info:
   title: Spotify-Api
   description: All endpoints of the personal Spotify-Api
-  version: 2.0.1
+  version: 2.1.0
 servers:
   - url: '{scheme}://{host}/spotify-api'
     description: 'Api Server'
@@ -19,6 +19,7 @@ servers:
         default: 'kolkie.de'
 
 tags:
+  - name: Color
   - name: Context
   - name: Playback
     description: All information about the playback history
@@ -27,6 +28,12 @@ tags:
   - name: SmallStats
   - name: Track
 paths:
+  /Color/Average:
+    $ref: '/swagger-python.yaml#/paths/~1Color~1Average'
+  /Color/Dominant:
+    $ref: '/swagger-python.yaml#/paths/~1Color~1Dominant'
+  /Color/Palette:
+    $ref: '/swagger-python.yaml#/paths/~1Color~1Palette'
   /Context/{contextUri}/PlayCount:
     $ref: 'swagger-node.yaml#/paths/~1Context~1{contextUri}~1PlayCount'
   /Playback/History:

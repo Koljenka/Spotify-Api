@@ -1,0 +1,101 @@
+openapi: '3.0.3'
+info:
+  title: Spotify-Api
+  description: All endpoints of the personal Spotify-Api
+  version: 2.1.0
+servers:
+  - url: '{scheme}://{host}/spotify-api'
+    description: 'Api Server'
+    variables:
+      scheme:
+        enum:
+          - 'https'
+          - 'http'
+        default: 'https'
+      host:
+        enum:
+          - 'kolkie.de'
+          - 'localhost:8080'
+        default: 'kolkie.de'
+
+tags:
+  - name: Color
+
+paths:
+  /Color/Average:
+    get:
+      tags:
+        - Color
+      summary: Gets the average color of the given image
+      operationId: getAverageColor
+      parameters:
+        - $ref: '#/components/parameters/Image'
+      responses:
+        200:
+          $ref: '#/components/responses/SingleRgbResponse'
+  /Color/Dominant:
+    get:
+      tags:
+        - Color
+      summary: Gets the most dominant color of the given image
+      operationId: getDominantColor
+      parameters:
+        - $ref: '#/components/parameters/Image'
+      responses:
+        200:
+          $ref: '#/components/responses/SingleRgbResponse'
+  /Color/Palette:
+    get:
+      summary: Returns a palette of dominant colors of the given image
+      tags:
+        - Color
+      parameters:
+        - $ref: '#/components/parameters/Image'
+      operationId: getColorPalette
+      responses:
+        200:
+          $ref: '#/components/responses/MultipleRgbResponse'
+
+components:
+  parameters:
+    Image:
+      in: query
+      name: img
+      required: true
+      description: URL of the image to analyze
+      schema:
+        type: string
+  schemas:
+    RGB:
+      type: object
+      properties:
+        r:
+          type: integer
+          minimum: 0
+          maximum: 255
+          example: 24
+        g:
+          type: integer
+          minimum: 0
+          maximum: 255
+          example: 45
+        b:
+          type: integer
+          minimum: 0
+          maximum: 255
+          example: 64
+  responses:
+    SingleRgbResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RGB'
+    MultipleRgbResponse:
+      description: OK
+      content:
+        application:json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/RGB'

@@ -2,7 +2,7 @@ openapi: '3.0.3'
 info:
   title: Spotify-Api
   description: All endpoints of the personal Spotify-Api
-  version: 2.0.0
+  version: 2.0.1
 servers:
   - url: '{scheme}://{host}/spotify-api'
     description: 'Api Server'
@@ -20,7 +20,7 @@ servers:
 
 paths:
   /Statistics/Box/NormalStats:
-    get:
+    post:
       tags:
         - Statistics
       summary: Gets BoxStats for the given song if any are found
@@ -45,7 +45,7 @@ paths:
         default:
           $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
   /Statistics/Box/SlowStats:
-    get:
+    post:
       tags:
         - Statistics
       summary: Gets difficult to calculate BoxStats for the given song if any are found
@@ -55,7 +55,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StatRequest'
+              properties:
+                track:
+                  $ref: '#/components/schemas/ApiTrack'
+                accessToken:
+                  type: string
+                  nullable: false
       responses:
         200:
           description: OK
@@ -70,7 +75,7 @@ paths:
         default:
           $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
   /Statistics/Small/UniqueArtist:
-    get:
+    post:
       summary: Gets the unique artists for the given timeframe
       tags:
         - SmallStats
@@ -89,7 +94,7 @@ paths:
         default:
           $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
   /Statistics/Small/AverageFeature:
-    get:
+    post:
       tags:
         - SmallStats
       operationId: getAverageFeatureStat
@@ -97,7 +102,7 @@ paths:
         - name: feature
           in: query
           required: true
-          schema: 
+          schema:
             type: string
             enum:
               - valence
@@ -117,7 +122,7 @@ paths:
         default:
           $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
   /Statistics/Small/ListeningTime:
-    get:
+    post:
       tags:
         - SmallStats
       operationId: getListeningTime
@@ -135,7 +140,7 @@ paths:
         default:
           $ref: 'swagger-shared.yaml#/components/responses/GenericErrorResponse'
   /Statistics/Small/TimeSpent:
-    get:
+    post:
       tags:
         - SmallStats
       operationId: getTimeSpent
@@ -178,9 +183,8 @@ components:
           type: integer
           nullable: false
           description: 1 is major 0 is minor
-          enum:
-            - 0
-            - 1
+          minimum: 0
+          maximum: 1
         tempo:
           type: number
           format: float
@@ -271,7 +275,6 @@ components:
       properties:
         accessToken:
           type: string
-          required: true
           nullable: false
         playbackHistory:
           type: array
@@ -286,7 +289,6 @@ components:
       properties:
         accessToken:
           type: string
-          required: true
           nullable: false
         track:
           $ref: '#/components/schemas/ApiTrack'

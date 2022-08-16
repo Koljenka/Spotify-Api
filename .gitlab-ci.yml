@@ -19,7 +19,7 @@ build:
   stage: build
   script: 
     - cd ./gen
-    - npm install --legacy-peer-deps
+    - npm install
     - npm run build
   needs:
     - job: generateSwagger
@@ -30,6 +30,7 @@ build:
     expire_in: 1 day
 
 deploy:
+  when: manual
   stage: deploy
   script:
     - cd './gen/dist'

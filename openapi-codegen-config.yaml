@@ -1,4 +1,4 @@
 additionalProperties:
-  ngVersion: 13.0.1
+  ngVersion: 14.1.2
   npmName: "@kn685832/spotify-api"
   npmRepository: "https://git.fh-muenster.de/api/v4/projects/13088/packages/npm/"
